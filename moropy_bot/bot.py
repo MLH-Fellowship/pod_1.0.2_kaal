@@ -1,9 +1,8 @@
 # bot.py
 import os
-import random
-from discord.ext import commands
 
 import discord
+from discord.ext import commands
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -18,12 +17,12 @@ async def on_ready():
     print(f'{client.user.name} has connected to Discord!')
 
 
-@bot.command(name="register", help="Start user registration")
+@bot.command(name='register', help='Start user registration')
 async def on_message(ctx):
     user = ctx.message.author
     channel = await user.create_dm()
     print(user.roles)
-    response = f"Starting user registration for user {user.id} with roles {user.roles}"
+    response = f'Starting user registration for user {user.id} with roles {user.roles}'
     await channel.send(response)
 
 
