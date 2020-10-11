@@ -21,8 +21,10 @@ async def on_ready():
 async def on_message(ctx):
     user = ctx.message.author
     channel = await user.create_dm()
-    print(user.roles)
-    response = f'Starting user registration for user {user.id} with roles {user.roles}'
+    roles = []
+    for i in user.roles:
+        roles.append(i.name)
+    response = f'Starting user registration for user {user.id} with roles {roles}'
     await channel.send(response)
 
 
