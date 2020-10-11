@@ -8,6 +8,7 @@ import click
 
 root_dir = ""
 credentials_file_name = "creds"
+status_file_name = "status"
 
 
 @click.command('register')
@@ -34,7 +35,15 @@ def checkin():
 
 @click.command('checkout')
 def checkout():
-    click.echo("I am checking out!")
+    status_file_path = os.path.join(root_dir, status_file_name)
+
+    if not os.path.exists(status_file_path):
+        print(status_file_path, "doesn't exist")
+        return
+
+    # writes close status to moropy.sh
+    with open(status_file_path, 'w') as file:
+        file.write("0")
 
 
 @click.command('away')
