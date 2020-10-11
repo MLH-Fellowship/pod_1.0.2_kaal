@@ -23,27 +23,30 @@ with open(status_file_path, 'w') as file:
 
 ticker_continue = True
 
-file = open("info.txt", "w")
+window_logs = open("logs.txt", "w")
 
 previous_window = ""
 
 while ticker_continue:
+
     # reads the status from moropy.sh
     with open(status_file_path, 'rb') as file:
         script = file.readlines()
         ticker_continue = bool(int(script[0].decode('UTF-8')))
 
     if not ticker_continue:
-        file.close()
+        window_logs.close()
         print("recieved close command, closing!")
+        break
 
     # if ticker_continue is false, ticker will stop after this iteration
 
-    cmd = "xdotool getwindowfocus getwindowname"
+    cmd = "xdotool getwindowfocus getwindowname getwindowpid"
     output = subprocess.getoutput(cmd)
 
     if output != previous_window:
-        file.write(output)
+        window_logs.write(output)
+        window_logs.write("\n")
         previous_window = output
 
     # sleeps for 0.5 second

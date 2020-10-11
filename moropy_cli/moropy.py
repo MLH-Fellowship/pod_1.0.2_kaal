@@ -46,7 +46,7 @@ def checkin():
         print("Checking in for", user_name, user_hash)
 
     subprocess.call("chmod +x ./ticker.py", shell=True)
-    subprocess.call("nohup ./ticker.py", shell=True)
+    subprocess.call("nohup ./ticker.py >/dev/null 2>&1 &", shell=True)
 
 
 @click.command('checkout')
