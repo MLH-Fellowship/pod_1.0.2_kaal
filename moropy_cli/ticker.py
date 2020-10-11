@@ -1,5 +1,6 @@
 #! /usr/bin/python3
 
+import datetime
 import os
 import pathlib
 import subprocess
@@ -23,9 +24,8 @@ with open(status_file_path, 'w') as file:
 
 ticker_continue = True
 
-window_logs = open("logs.txt", "w")
-
 previous_window = ""
+previos_start_time = datetime.datetime.utcnow()
 
 while ticker_continue:
 
@@ -35,19 +35,29 @@ while ticker_continue:
         ticker_continue = bool(int(script[0].decode('UTF-8')))
 
     if not ticker_continue:
-        window_logs.close()
-        print("recieved close command, closing!")
         break
 
     # if ticker_continue is false, ticker will stop after this iteration
 
     cmd = "xdotool getwindowfocus getwindowname getwindowpid"
+
     output = subprocess.getoutput(cmd)
 
-    if output != previous_window:
-        window_logs.write(output)
-        window_logs.write("\n")
-        previous_window = output
+    pid = output.split('\n')[1]
 
-    # sleeps for 0.5 second
+    process_name_cmd = "ps -p {} -o comm=".format(pid)
+
+    process_name = subprocess.getoutput(process_name_cmd)
+
+    if process_name != previous_window and len(process_name) > 0:
+
+        with open("logs.csv", "a") as window_logs:
+
+            time_delta = (datetime.datetime.utcnow() - previos_start_time).total_seconds()
+
+            window_logs.write("{},{}\n".format(previous_window, time_delta))
+
+            previous_window = process_name
+            previos_start_time = datetime.datetime.utcnow()
+
     time.sleep(0.5)
