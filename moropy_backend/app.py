@@ -12,17 +12,22 @@ def welcome():
 @app.route('/register/', methods=['POST'])
 def register_user():
     input_json = request.get_json(force=True)
-    print("USER ID", input_json['user_id'])
+    print("USER ID", input_json['userId'])
     print("ROLES", input_json['roles'])
-    userHash = upload(input_json['user_id'], input_json['roles'])
+    userHash = upload(input_json['userId'], input_json['roles'], input_json['userName'])
     return jsonify({"statusCode": 200, "userHash": userHash})
 
 
-@app.route('/<string:userHash>', methods=['GET'])
-def get_user_details(userHash):
-    print(userHash)
-    resp = get_user(userHash)
-    return jsonify({'user': resp})
+@app.route('/validate/', methods=['POST'])
+def get_user_details():
+    input_json = request.get_json(force=True)
+
+    print(input_json['userHash'])
+    resp = get_user(input_json['userHash'])
+    if resp == 'User not found':
+        return jsonify({'msg': "User does not exist"}), 401
+    else:
+        return jsonify({'user': resp}), 200
 
 
 @app.route('/storeactivity/', methods=['GET', 'POST'])
@@ -40,7 +45,7 @@ def activity():
             return jsonify({"msg": "Error"})
 
 
-@app.route('/status/', methods=['POST'])
+@app.route('/status/', methods=['GET', 'POST'])
 def update_status():
     if request.method == 'GET':
         print('GET')
@@ -55,4 +60,4 @@ def update_status():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=3000, debug=True)
+    app.run(host="0.0.0.0", port=1500, debug=True)

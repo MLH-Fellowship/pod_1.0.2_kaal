@@ -1,7 +1,6 @@
-import uuid
-
-import firebase_admin
 from firebase_admin import credentials, firestore
+import firebase_admin
+import base64
 
 # Use a service account
 cred = credentials.Certificate('firebase-key.json')
@@ -12,23 +11,25 @@ user_ref = db.collection(u'users')
 batch = db.batch()
 
 
-def upload(userID, roles):
+def upload(userID, roles, userName):
     print('working')
-    userHash = uuid.uuid4()
-    doc_ref = user_ref.document(f'{userHash}')
-    doc_ref.set({u'roles': roles, u'discordId': userID})
+
+    userHash = base64.b64encode(userID.encode("ascii"))
+    doc_ref = user_ref.document("hello")
+    doc_ref.set({u'roles': roles, u'discordId': userID, u'userName': userName})
     return userHash
 
 
 def get_user(userHash):
     print("getting user")
+    print(userHash)
     users = user_ref.stream()
     for user in users:
         if user.id == userHash:
+
             print(user.to_dict())
             return user.to_dict()
-        else:
-            return 'User not found'
+    return 'User not found'
 
 
 def store_activity(userHash, activity):
