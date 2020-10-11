@@ -1,5 +1,7 @@
 #! /usr/bin/python3
 
+import os
+import pathlib
 import subprocess
 import time
 
@@ -9,16 +11,21 @@ import time
 # At each second the ticker will check the status from the file
 # and then execute the command of getting the active window.
 
+root_dir = pathlib.Path.home()
+moropy_dir = os.path.join(root_dir, ".moropy")
+status_file_name = "status"
+status_file_path = os.path.join(moropy_dir, status_file_name)
+
 
 # writes active status to moropy.sh
-with open('/tmp/moropy.sh', 'w') as file:
+with open(status_file_path, 'w') as file:
     file.write("1")
 
 ticker_continue = True
 
 while ticker_continue:
     # reads the status from moropy.sh
-    with open('/tmp/moropy.sh', 'rb') as file:
+    with open(status_file_path, 'rb') as file:
         script = file.readlines()
         ticker_continue = bool(int(script[0].decode('UTF-8')))
 
