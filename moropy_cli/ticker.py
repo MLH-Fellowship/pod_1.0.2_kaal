@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
-import time
 import subprocess
+import time
 
 # The ticker script creates a moropy.sh file in the tmp folder
 # to keep the status of ticker. 0 - ticker should stop,
