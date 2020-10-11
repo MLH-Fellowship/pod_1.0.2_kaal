@@ -1,7 +1,6 @@
-from flask import Flask
-from flask import jsonify
-from flask import request
-from firebase_services import upload, get_user, store_activity, update
+from firebase_services import get_user, store_activity, update, upload
+from flask import Flask, jsonify, request
+
 app = Flask(__name__)
 
 
@@ -28,7 +27,7 @@ def get_user_details(userHash):
 
 @app.route('/storeactivity/', methods=['GET', 'POST'])
 def activity():
-    if(request.method == 'GET'):
+    if request.method == 'GET':
         print('GET')
         return jsonify({"msg": "This is a POST route"})
     else:
@@ -43,13 +42,13 @@ def activity():
 
 @app.route('/status/', methods=['POST'])
 def update_status():
-    if(request.method == 'GET'):
+    if request.method == 'GET':
         print('GET')
         return jsonify({"msg": "This is a POST route"})
     else:
         input_json = request.get_json(force=True)
         ret = update(input_json['userHash'], input_json['status'])
-        if(ret == 'successful'):
+        if ret == 'successful':
             return jsonify({"msg": "Status updated successfully"})
         else:
             return jsonify({"msg": "Error"})
