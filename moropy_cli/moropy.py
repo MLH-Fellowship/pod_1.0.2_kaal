@@ -2,6 +2,7 @@
 
 import os
 import pathlib
+import requests
 import subprocess
 
 import click
@@ -16,9 +17,22 @@ status_file_name = "status"
 def register_user(code):
     credentials_file_path = os.path.join(root_dir, credentials_file_name)
 
+    # section to contact the backend API to validate code
+
+    response = requests.get("https://www.google.com")
+
+    if response.status_code != 200:
+        print("Invalid Token. Please try again!")
+        return
+
+    username = "zerefwayne"
+
     with open(credentials_file_path, "w") as file:
         file.write(code)
-    click.echo("Successfully registered! You can continue with checking in!")
+        file.write('\n')
+        file.write(username)
+
+    click.echo("Successfully registered {}! You can continue with checking in!".format(username))
 
 
 @click.command('checkin')
@@ -27,7 +41,9 @@ def checkin():
 
     with open(credentials_file_path, "rb") as file:
         user_hash = file.readline().decode('UTF-8')
-        print("Checking in for", user_hash)
+        user_name = file.readline().decode('UTF-8')
+
+        print("Checking in for", user_name, user_hash)
 
     subprocess.call("chmod +x ./ticker.py", shell=True)
     subprocess.call("nohup ./ticker.py", shell=True)
