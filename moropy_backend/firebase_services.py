@@ -44,7 +44,7 @@ def store_activity(userHash, activity):
 def update(userHash, status):
     print('updating status')
     doc_ref = user_ref.document(f'{userHash}')
-    doc_ref.set(
+    doc_ref.update(
         {
             u'status': status,
         }
