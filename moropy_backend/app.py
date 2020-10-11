@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import jsonify
 from flask import request
-from firebase_upload import upload, get_user
+from firebase_services import upload, get_user, store_activity
 app = Flask(__name__)
 
 
@@ -24,6 +24,21 @@ def get_user_details(userHash):
     print(userHash)
     resp = get_user(userHash)
     return jsonify({'user': resp})
+
+
+@app.route('/activity/', methods=['GET', 'POST'])
+def activity():
+    if(request.method == 'GET'):
+        print('GET')
+        return jsonify({"type": "GET"})
+    else:
+        input_json = request.get_json(force=True)
+        print('POST')
+        ret = store_activity(input_json['userHash'], input_json['activities'])
+        if ret == 'working':
+            return jsonify({"msg": "Activity stored successfully"})
+        else:
+            return jsonify({"msg": "Error"})
 
 
 if __name__ == '__main__':

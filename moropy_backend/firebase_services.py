@@ -8,6 +8,7 @@ firebase_admin.initialize_app(cred)
 
 db = firestore.client()
 user_ref = db.collection(u'users')
+batch = db.batch()
 
 
 def upload(userID, roles):
@@ -28,3 +29,15 @@ def get_user(userHash):
         if(user.id == userHash):
             print(user.to_dict())
             return user.to_dict()
+        else:
+            return 'User not found'
+
+
+def store_activity(userHash, activity):
+    print('storing activity')
+    doc_ref = user_ref.document(f'{userHash}').collection('activity')
+    for i in range(len(activity)):
+        doc_ref.document().set(activity[i])
+
+    print('done')
+    return "working"
