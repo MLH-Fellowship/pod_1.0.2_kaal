@@ -1,6 +1,7 @@
 #! /usr/bin/python3
 
 import datetime
+import json
 import os
 import pathlib
 import subprocess
@@ -16,6 +17,8 @@ root_dir = pathlib.Path.home()
 moropy_dir = os.path.join(root_dir, ".moropy")
 status_file_name = "status"
 status_file_path = os.path.join(moropy_dir, status_file_name)
+flush_file_path = "flush.csv"
+userhash = "heeelo"
 
 
 def write_to_file(filename, process, start_time):
@@ -32,6 +35,39 @@ def write_to_file(filename, process, start_time):
         )
 
 
+def push_to_database():
+    activities = []
+    with open("logs.csv", "rb") as file:
+
+        while True:
+
+            line = file.readline()
+
+            if not line:
+                break
+
+            process, startTime, endTime, duration = line.decode('UTF-8').split(',')
+
+            activities.append(
+                {
+                    "name": process,
+                    "start_time": startTime,
+                    "end_time": endTime,
+                    "duration": int(float(duration)),
+                }
+            )
+
+    payload = {"userHash": userhash, "activities": activities}
+
+    payload_json = json.dumps(payload)
+
+    with open(flush_file_path, "w") as f:
+        f.write(payload_json)
+
+    with open("logs.csv", "w") as file:
+        pass
+
+
 # writes active status to moropy.sh
 with open(status_file_path, 'w') as file:
     file.write("1")
@@ -40,6 +76,7 @@ ticker_continue = True
 
 previous_window = ""
 previos_start_time = datetime.datetime.utcnow()
+previos_push_time = datetime.datetime.utcnow()
 
 with open("logs.csv", "w") as window_logs:
     pass
@@ -53,7 +90,12 @@ while ticker_continue:
 
     if not ticker_continue:
         write_to_file("logs.csv", previous_window, previos_start_time)
+        push_to_database()
         break
+
+    if (datetime.datetime.utcnow() - previos_push_time).total_seconds() >= 1 * 60:
+        push_to_database()
+        previos_push_time = datetime.datetime.utcnow()
 
     # if ticker_continue is false, ticker will stop after this iteration
 

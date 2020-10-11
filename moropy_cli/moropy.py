@@ -1,5 +1,6 @@
 #! ./venv/bin/python3
 
+import json
 import os
 import pathlib
 import subprocess
@@ -19,11 +20,21 @@ def register_user(code):
 
     # section to contact the backend API to validate code
 
-    response = requests.get("https://www.google.com")
+    response = requests.post(
+        "https://930a005b7377.ngrok.io/validate/", json.dumps({"userHash": code})
+    )
 
-    if response.status_code != 200:
+    if response.status_code == 401:
         print("Invalid Token. Please try again!")
         return
+
+    if response.status_code != 200:
+        print("Server error. please contact admin.")
+        return
+
+    response_data = response.json()
+
+    print(response_data)
 
     username = "zerefwayne"
 
@@ -68,12 +79,38 @@ def checkout():
 
 @click.command('away')
 def set_away():
-    click.echo("I am away!")
+
+    click.echo("Setting away")
+
+    credentials_file_path = os.path.join(root_dir, credentials_file_name)
+
+    with open(credentials_file_path, "rb") as file:
+        user_hash = file.readline().decode('UTF-8')[:-1]
+        user_name = file.readline().decode('UTF-8')
+
+        data = {'userHash': user_hash, 'status': 'away'}
+
+        res = requests.post("https://930a005b7377.ngrok.io/status/", json.dumps(data))
+
+        print(res.json())
 
 
 @click.command('available')
 def set_available():
-    click.echo("I am available!")
+
+    click.echo("Setting available")
+
+    credentials_file_path = os.path.join(root_dir, credentials_file_name)
+
+    with open(credentials_file_path, "rb") as file:
+        user_hash = file.readline().decode('UTF-8')[:-1]
+        user_name = file.readline().decode('UTF-8')
+
+        data = {'userHash': user_hash, 'status': 'available'}
+
+        res = requests.post("https://930a005b7377.ngrok.io/status/", json.dumps(data))
+
+        print(res.json())
 
 
 @click.group()
