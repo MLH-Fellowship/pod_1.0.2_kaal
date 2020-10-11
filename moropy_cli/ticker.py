@@ -27,8 +27,9 @@ def write_to_file(filename, process, start_time):
     duration = (end_time - start_time).total_seconds()
 
     with open(filename, "a") as window_logs:
-        window_logs.write("{},{},{},{}\n".format(previous_window, start_time, end_time, duration))
-
+        window_logs.write(
+            "{},{},{},{}\n".format(previous_window, start_time, end_time, duration)
+        )
 
 
 # writes active status to moropy.sh
@@ -53,7 +54,6 @@ while ticker_continue:
     if not ticker_continue:
         write_to_file("logs.csv", previous_window, previos_start_time)
         break
-
 
     # if ticker_continue is false, ticker will stop after this iteration
 
