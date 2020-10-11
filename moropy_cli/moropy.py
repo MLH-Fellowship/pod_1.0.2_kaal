@@ -2,31 +2,34 @@
 
 import os
 import pathlib
+import subprocess
 
 import click
 
 root_dir = ""
+credentials_file_name = "creds"
 
 
 @click.command('register')
 @click.option('-c', '--code', required=True)
 def register_user(code):
-
-    credentials_file_name = "creds"
-
     credentials_file_path = os.path.join(root_dir, credentials_file_name)
 
-    if not os.path.exists(credentials_file_path):
-        with open(credentials_file_path, "w") as f:
-            f.write(code)
-        click.echo("Successfully registered! You can continue with checking in!")
-    else:
-        click.echo("Already registered!")
+    with open(credentials_file_path, "w") as file:
+        file.write(code)
+    click.echo("Successfully registered! You can continue with checking in!")
 
 
 @click.command('checkin')
 def checkin():
-    click.echo("I am checking in!")
+    credentials_file_path = os.path.join(root_dir, credentials_file_name)
+
+    with open(credentials_file_path, "rb") as file:
+        user_hash = file.readline().decode('UTF-8')
+        print("Checking in for", user_hash)
+
+    subprocess.call("chmod +x ./ticker.py", shell=True)
+    subprocess.call("nohup ./ticker.py", shell=True)
 
 
 @click.command('checkout')
