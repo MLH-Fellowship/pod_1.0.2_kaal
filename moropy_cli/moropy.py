@@ -2,10 +2,10 @@
 
 import os
 import pathlib
-import requests
 import subprocess
 
 import click
+import requests
 
 root_dir = ""
 credentials_file_name = "creds"
@@ -32,7 +32,11 @@ def register_user(code):
         file.write('\n')
         file.write(username)
 
-    click.echo("Successfully registered {}! You can continue with checking in!".format(username))
+    click.echo(
+        "Successfully registered {}! You can continue with checking in!".format(
+            username
+        )
+    )
 
 
 @click.command('checkin')
