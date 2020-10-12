@@ -18,11 +18,13 @@ def upload(userID, roles, userName):
     userHash = uuid.uuid4()
     doc_ref = user_ref.document(f"{userHash}")
     doc_ref.set({u'roles': roles, u'discordId': userID, u'userName': userName})
+
     return userHash
 
 
 def get_user(userHash):
     print("getting user")
+
     print(userHash)
     users = user_ref.stream()
     for user in users:
@@ -31,6 +33,7 @@ def get_user(userHash):
             print(user.to_dict())
             return user.to_dict()
     return 'User not found'
+
 
 
 def store_activity(userHash, activity):
