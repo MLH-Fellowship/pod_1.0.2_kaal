@@ -1,6 +1,6 @@
 from firebase_admin import credentials, firestore
 import firebase_admin
-import base64
+import uuid
 
 # Use a service account
 cred = credentials.Certificate('firebase-key.json')
@@ -14,8 +14,8 @@ batch = db.batch()
 def upload(userID, roles, userName):
     print('working')
 
-    userHash = base64.b64encode(userID.encode("ascii"))
-    doc_ref = user_ref.document("hello")
+    userHash = uuid.uuid4()
+    doc_ref = user_ref.document(f"{userHash}")
     doc_ref.set({u'roles': roles, u'discordId': userID, u'userName': userName})
     return userHash
 
