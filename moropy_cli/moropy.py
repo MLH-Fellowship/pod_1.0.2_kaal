@@ -1,5 +1,6 @@
 #! ./venv/bin/python3
 
+import datetime
 import json
 import os
 import pathlib
@@ -25,8 +26,17 @@ def read_user_data():
 
 
 @click.command('register')
-@click.option('-c', '--code', required=True)
-def register_user(code):
+def register_user():
+
+    click.echo("👋 Welcome to Kaal!")
+    click.echo()
+
+    code = click.prompt("🤫 Enter your secret code here", type=str)
+    click.echo()
+
+    click.echo("⏱️  Please wait while I validate your code!")
+    click.echo()
+
     credentials_file_path = os.path.join(root_dir, credentials_file_name)
 
     # section to contact the backend API to validate code
@@ -36,11 +46,13 @@ def register_user(code):
     )
 
     if response.status_code == 401:
-        print("Invalid Token. Please try again!")
+        print("🤨 I found your token to be invalid. Please try again!")
         return
 
     if response.status_code != 200:
-        print("Server error. please contact admin.")
+        print(
+            "🤯 I couldn't reach the Kaal servers. Please try again or contact the admin."
+        )
         return
 
     response_data = response.json()
@@ -50,16 +62,18 @@ def register_user(code):
         "userName": response_data['user']['userName'],
     }
 
+    click.secho("✅ Congratulations ", nl=False)
+    click.echo(
+        click.style("{}".format(user_data['userName']), bold=True, fg='yellow'),
+        nl=False,
+    )
+    click.echo("! Registration process is successful.\n")
+    click.echo("🥺 I can't wait to hear the checkin and checkout commands.")
+
     file_data = json.dumps(user_data, indent=4)
 
     with open(credentials_file_path, "w") as file:
         file.write(file_data)
-
-    click.echo(
-        "Successfully registered {}! You can continue with checking in!".format(
-            user_data['userName']
-        )
-    )
 
 
 @click.command('checkin')
@@ -67,11 +81,26 @@ def checkin():
 
     user_data = read_user_data()
 
-    print("Checking in for", user_data)
+    click.echo()
+
+    click.echo(
+        click.style("🌞 Checking you in {}!".format(user_data['userName']), fg='green')
+    )
+
+    hours = datetime.datetime.now().time().hour
+    minutes = datetime.datetime.now().time().minute
+
+    click.echo()
+
+    click.echo("⏲  The time is ", nl=False)
+    click.secho("{}:{}".format(hours, minutes), bold=True)
+
+    click.echo()
+
+    click.echo("🧐 Getting some popcorn! 🍿 It's interesting to watch you work!")
 
     subprocess.call("chmod +x ./ticker.py", shell=True)
-    # subprocess.call("nohup ./ticker.py >/dev/null 2>&1 &", shell=True)
-    subprocess.call("nohup ./ticker.py &", shell=True)
+    subprocess.call("nohup ./ticker.py >/dev/null 2>&1 &", shell=True)
 
 
 @click.command('checkout')
@@ -80,7 +109,23 @@ def checkout():
 
     user_data = read_user_data()
 
-    print("Checking out", user_data)
+    click.echo()
+
+    click.echo(
+        click.style(
+            "🌞 Checking you out {}!".format(user_data['userName']), fg='bright_black'
+        )
+    )
+
+    hours = datetime.datetime.now().time().hour
+    minutes = datetime.datetime.now().time().minute
+
+    click.echo()
+
+    click.echo("⏲  The time is ", nl=False)
+    click.secho("{}:{}".format(hours, minutes), bold=True)
+
+    click.echo()
 
     if not os.path.exists(status_file_path):
         print(status_file_path, "doesn't exist")
@@ -89,6 +134,8 @@ def checkout():
     # writes close status to moropy.sh
     with open(status_file_path, 'w') as file:
         file.write("0")
+
+    click.echo("😌 Great work today! Going to sleep! Bye! 🙌")
 
 
 @click.command('away')
@@ -130,7 +177,6 @@ def set_available():
 @click.group()
 def init_cli():
 
-    print("Initalizing Moropy")
     user_home_dir = pathlib.Path.home()
 
     global root_dir
