@@ -43,9 +43,33 @@ def store_activity(userHash, activity):
 
 def update(userHash, status):
     doc_ref = user_ref.document(f'{userHash}')
-    doc_ref.set(
+    doc_ref.update(
         {
             u'status': status,
         }
     )
     return 'successful'
+
+
+def updateWebhooks(userHash, webhookUrls):
+    doc_ref = user_ref.document(f'{userHash}')
+    doc_ref.update({u'webhookUrls': webhookUrls})
+    return True
+
+
+def makeChannel(channel_id, url):
+    channel_ref = db.collection(u'channels')
+    channel_ref.document(channel_id).set({"url": url})
+    return True
+
+
+def getChannel(channel_id):
+
+    channel_ref = db.collection(u'channels')
+    res = channel_ref.stream()
+    for r in res:
+        if r.id == channel_id:
+            print(True)
+            return r.to_dict()
+
+    return ''

@@ -1,4 +1,11 @@
-from firebase_services import get_user, store_activity, update, upload
+from firebase_services import (
+    get_user,
+    getChannel,
+    store_activity,
+    update,
+    updateWebhooks,
+    upload,
+)
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
@@ -34,9 +41,9 @@ def activity():
         input_json = request.get_json(force=True)
         ret = store_activity(input_json['userHash'], input_json['activities'])
         if ret == 'working':
-            return jsonify({"msg": "Activity stored successfully"})
+            return jsonify({"msg": "Activity stored successfully"}), 200
         else:
-            return jsonify({"msg": "Error"})
+            return jsonify({"msg": "Error"}), 400
 
 
 @app.route('/status/', methods=['GET', 'POST'])
@@ -47,9 +54,36 @@ def update_status():
         input_json = request.get_json(force=True)
         ret = update(input_json['userHash'], input_json['status'])
         if ret == 'successful':
-            return jsonify({"msg": "Status updated successfully"})
+            return jsonify({"msg": "Status updated successfully"}), 200
         else:
-            return jsonify({"msg": "Error"})
+            return jsonify({"msg": "Error"}), 400
+
+
+@app.route('/storechannel', methods=['POST'])
+def update_web():
+    input_json = request.get_json(force=True)
+    ret = updateWebhooks(input_json['userHash'], input_json['webhookUrls'])
+    if ret == True:
+        return jsonify({"msg": "webhooks stored successfully"}), 200
+    else:
+        return jsonify({"msg": "Error"}), 400
+
+
+@app.route('/channel/<string:channel_id>', methods=['GET', 'POST'])
+def get_channel_details(channel_id):
+    if request.method == 'GET':
+        ret = getChannel(channel_id)
+        if ret != '':
+            return jsonify({"channel": ret}), 200
+        else:
+            return jsonify({"msg": "Error"}), 400
+    else:
+        input_json = request.get_json(force=True)
+        ret = makeChannel(channel_id, input_json['webhook_url'])
+        if ret == True:
+            return jsonify({"msg": "Channel created successfully"}), 200
+        else:
+            return jsonify({"msg": "Error"}), 400
 
 
 if __name__ == '__main__':
