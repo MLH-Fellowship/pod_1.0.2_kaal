@@ -15,7 +15,14 @@ batch = db.batch()
 def upload(userID, roles, userName):
     userHash = uuid.uuid4()
     doc_ref = user_ref.document(f"{userHash}")
-    doc_ref.set({u'roles': roles, u'discordId': userID, u'userName': userName, u'status': 'Away'})
+    doc_ref.set(
+        {
+            u'roles': roles,
+            u'discordId': userID,
+            u'userName': userName,
+            u'status': 'Away',
+        }
+    )
     return userHash
 
 

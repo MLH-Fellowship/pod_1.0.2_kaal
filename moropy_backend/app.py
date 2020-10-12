@@ -28,7 +28,7 @@ def get_user_details():
 
 @app.route('/storeactivity/', methods=['GET', 'POST'])
 def activity():
-    if request.method == 'GET'
+    if request.method == 'GET':
         return jsonify({"msg": "This is a POST route"})
     else:
         input_json = request.get_json(force=True)
