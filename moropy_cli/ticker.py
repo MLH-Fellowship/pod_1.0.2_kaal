@@ -51,6 +51,8 @@ def push_to_database():
 
     user_data = read_user_data()
     activities = []
+    total_time = 0
+
     with open("logs.csv", "rb") as file:
 
         while True:
@@ -62,6 +64,8 @@ def push_to_database():
 
             process, startTime, endTime, duration = line.decode('UTF-8').split(',')
 
+            total_time += int(float(duration))
+
             activities.append(
                 {
                     "name": process,
@@ -71,16 +75,18 @@ def push_to_database():
                 }
             )
 
-    payload = {"userHash": user_data['userHash'], "activities": activities}
+    payload = {"userHash": user_data['userHash'], "activities": activities, "codingTime": total_time}
 
     payload_json = json.dumps(payload)
 
+    # print(payload_json)
+
     response = requests.post("{}/storeactivity/".format(base_url), payload_json)
 
-    print(response.status_code)
+    # print(response.status_code)
 
-    with open(flush_file_path, "w") as f:
-        f.write(payload_json)
+    # with open(flush_file_path, "w") as f:
+        # f.write(payload_json)
 
     with open("logs.csv", "w") as file:
         pass
