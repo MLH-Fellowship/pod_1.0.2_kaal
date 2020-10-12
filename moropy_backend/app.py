@@ -69,13 +69,21 @@ def update_web():
         return jsonify({"msg": "Error"}), 400
 
 
-@app.route('/channel/<string:channel_id>', methods=['GET'])
+@app.route('/channel/<string:channel_id>', methods=['GET', 'POST'])
 def get_channel_details(channel_id):
-    ret = getChannel(channel_id)
-    if ret != '':
-        return jsonify({"channel": ret}), 200
+    if request.method == 'GET':
+        ret = getChannel(channel_id)
+        if ret != '':
+            return jsonify({"channel": ret}), 200
+        else:
+            return jsonify({"msg": "Error"}), 400
     else:
-        return jsonify({"msg": "Error"}), 400
+        input_json = request.get_json(force=True)
+        ret = makeChannel(channel_id, input_json['webhook_url'])
+        if ret == True:
+            return jsonify({"msg": "Channel created successfully"}), 200
+        else:
+            return jsonify({"msg": "Error"}), 400
 
 
 if __name__ == '__main__':

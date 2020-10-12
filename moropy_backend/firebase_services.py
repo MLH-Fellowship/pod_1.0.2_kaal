@@ -53,19 +53,13 @@ def update(userHash, status):
 
 def updateWebhooks(userHash, webhookUrls):
     doc_ref = user_ref.document(f'{userHash}')
-    key = []
-    upload = []
-    for j in webhookUrls:
-        for y in j.keys():
-            key.append(y)
-        for x in j.values():
-            upload.append(x)
-    doc_ref.update({u'webhookUrls': upload})
+    doc_ref.update({u'webhookUrls': webhookUrls})
+    return True
 
+
+def makeChannel(channel_id, url):
     channel_ref = db.collection(u'channels')
-    for i in range(len(webhookUrls)):
-        channel_ref.document(key[i]).set({u'url': upload[i]})
-
+    channel_ref.document(channel_id).set({"url": url})
     return True
 
 
