@@ -9,15 +9,10 @@ from dotenv import load_dotenv
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-baseURL = "https://kaal-backend.herokuapp.com/"
+baseURL = os.getenv('BASEURL')
 
 client = discord.Client()
 bot = commands.Bot(command_prefix='!')
-
-
-@client.event
-async def on_ready():
-    print(f'{client.user.name} has connected to Discord!')
 
 
 @bot.command(name='register', help='Start user registration')
@@ -37,7 +32,6 @@ async def on_message(ctx):
     )
 
     res = r.json()
-    print(res)
     userHash = res['userHash']
     resp2 = f'Your key is: {userHash}. Please enter it in the CLI'
     await channel.send(resp2)
