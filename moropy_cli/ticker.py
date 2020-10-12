@@ -4,9 +4,10 @@ import datetime
 import json
 import os
 import pathlib
-import requests
 import subprocess
 import time
+
+import requests
 
 # The ticker script creates a moropy.sh file in the tmp folder
 # to keep the status of ticker. 0 - ticker should stop,
