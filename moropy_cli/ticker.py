@@ -4,6 +4,7 @@ import datetime
 import json
 import os
 import pathlib
+import requests
 import subprocess
 import time
 
@@ -19,6 +20,7 @@ status_file_name = "status"
 status_file_path = os.path.join(moropy_dir, status_file_name)
 flush_file_path = "flush.csv"
 userhash = "heeelo"
+base_url = "https://kaal-backend.herokuapp.com"
 
 
 def write_to_file(filename, process, start_time):
@@ -60,6 +62,10 @@ def push_to_database():
     payload = {"userHash": userhash, "activities": activities}
 
     payload_json = json.dumps(payload)
+
+    response = requests.post("{}/storeactivity/".format(base_url), payload_json)
+
+    print(response.status_code)
 
     with open(flush_file_path, "w") as f:
         f.write(payload_json)
