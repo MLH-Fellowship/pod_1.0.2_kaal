@@ -10,7 +10,27 @@
 
 ## 💁‍♂️ What is the project?
 
+**Kaal is a productivity suite with a beautiful CLI ✨ and Discord Bot 🤖. Kaal shows the fellows' work time and productivity at a glance within Discord and a simple CLI tool to track each fellow's coding routine while working for the fellowship. 💪**
+
+— *Gamify the pod's productivity!*
+
 ## 🧑‍🔬 How to use it?
+
+#### Prerequisites:
+
+1. Python3: [Installation Steps](https://phoenixnap.com/kb/how-to-install-python-3-ubuntu)
+2. Clone the repository: `https://github.com/MLH-Fellowship/pod_1.0.2_moropy.git`
+3. Type `sudo apt-get install xdotool`
+4. Head over to the cloned repository's `kaal_cli` folder and type `pip3 install -r requirements.txt`
+5. All the dependencies will be installed and the project is good to go! 🎉
+
+
+#### Instructions:
+
+1. Type `!register` command in the Kaal enabled Discord channel and it'll return your `Secret Code` 🤫 in the DM.
+2. Head over to the repository and type `./moropy.py register` and paste the `Secret Code`.
+3. When you wish to start the work, type `./moropy.py checkin` and it'll start watching the softwares open. 👀
+4. When it's time to stop the work, type `./moropy.py checkout`, the CLI will check you out and stop watching the windows. 😌
 
 ## 🙇 Why do we need it?
 
