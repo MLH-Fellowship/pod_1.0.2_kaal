@@ -34,6 +34,14 @@ def get_user(userHash):
     return 'User not found'
 
 
+def validate_user(userID):
+    users = user_ref.stream()
+    for user in users:
+        if userID == user.to_dict()['discordId']:
+            return user.id
+    return "User not found"
+
+
 def store_activity(userHash, activity):
     doc_ref = user_ref.document(f'{userHash}').collection('activity')
     for i in range(len(activity)):

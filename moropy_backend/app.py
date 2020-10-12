@@ -5,6 +5,7 @@ from firebase_services import (
     update,
     updateWebhooks,
     upload,
+    validate_user
 )
 from flask import Flask, jsonify, request
 
@@ -31,6 +32,16 @@ def get_user_details():
         return jsonify({'msg': "User does not exist"}), 401
     else:
         return jsonify({'user': resp}), 200
+
+
+@app.route('/validatebot/', methods=['POST'])
+def validate():
+    input_json = request.get_json(force=True)
+    resp = validate_user(input_json['userID'])
+    if resp == 'User not found':
+        return jsonify({'status': False}), 401
+    else:
+        return jsonify({'status': True, 'userHash': resp}), 200
 
 
 @app.route('/storeactivity/', methods=['GET', 'POST'])
