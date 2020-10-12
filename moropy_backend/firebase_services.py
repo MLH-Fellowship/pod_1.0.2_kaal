@@ -43,9 +43,25 @@ def store_activity(userHash, activity):
 
 def update(userHash, status):
     doc_ref = user_ref.document(f'{userHash}')
-    doc_ref.set(
+    doc_ref.update(
         {
             u'status': status,
         }
     )
     return 'successful'
+
+
+def updateWebhooks(userHash, webhookUrls):
+    doc_ref = user_ref.document(f'{userHash}')
+    upload = []
+    for j in webhookUrls:
+        for x in j.values():
+            upload.append(x)
+    doc_ref.update({
+        u'webhookUrls': upload
+    })
+    channel_ref = db.collection(u'channels')
+    for i in webhookUrls:
+        channel_ref.document().set(i)
+
+    return True
