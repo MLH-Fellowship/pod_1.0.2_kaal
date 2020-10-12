@@ -88,7 +88,7 @@ def set_away():
 
     with open(credentials_file_path, "rb") as file:
         user_hash = file.readline().decode('UTF-8')[:-1]
-        user_name = file.readline().decode('UTF-8')
+        # user_name = file.readline().decode('UTF-8')
 
         data = {'userHash': user_hash, 'status': 'away'}
 
@@ -106,7 +106,7 @@ def set_available():
 
     with open(credentials_file_path, "rb") as file:
         user_hash = file.readline().decode('UTF-8')[:-1]
-        user_name = file.readline().decode('UTF-8')
+        # user_name = file.readline().decode('UTF-8')
 
         data = {'userHash': user_hash, 'status': 'available'}
 
