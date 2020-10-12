@@ -4,8 +4,6 @@ from discord.ext import commands
 
 from . import config
 
-baseURL = os.getenv('BASEURL')
-
 client = discord.Client()
 bot = commands.Bot(command_prefix='!')
 
@@ -50,10 +48,10 @@ async def on_message(ctx):
             f'with this code `{status_code}`. Our developers will help you!'
         )
 
-    await create_webhooks_for_users(ctx, user)
+    await create_webhooks_for_users(ctx, user, userHash)
 
 
-async def create_webhooks_for_users(ctx, user):
+async def create_webhooks_for_users(ctx, user, userHash):
     # Code for creating webhooks for each channel
     # Get all text_channels grouped by categories
     category_dict = dict(ctx.guild.by_category())
@@ -79,31 +77,22 @@ async def create_webhooks_for_users(ctx, user):
             if channel.name == 'general':
                 user_channels.append(channel)
 
-    # TODO: Check in database, whether a webhook has been already created for these channel
-
     # Create webhooks for all channels in "available channel"
     for channel in user_channels:
-        # TODO: Remove this when lookup for database is implemented
-
         # Try a local lookup for webhook url
         try:
             webhook_url = CHANNEL_WEBHOOK_URL[channel.id]
         except KeyError:
-            # Look whether webhook for such URL is available on discord server
-            channel_webhooks = await channel.webhooks()
-            webhook_exists = False
-            for webhook in channel_webhooks:
-                if webhook.name == 'moropy_bot':
-                    webhook_exists = True
-                    webhook_url = webhook.url
-            if not webhook_exists:
-                webhook_url = await channel.create_webhook(name='moropy_bot').url
+            # Look whether webhook for such URL is available on Kaal backend
+            status_code, webhook_url = utils.get_channel_webhook_url(channel.id)
+            if not webhook_url:
+                webhook = await channel.create_webhook(name='moropy_bot')
+                webhook_url = webhook.url
                 CHANNEL_WEBHOOK_URL[channel.id] = webhook_url
+                utils.create_channel_webhook_url(channel.id, webhook_url)
         finally:
             user_webhooks.append(webhook_url)
-
-    # TODO: Update all user_webhooks to database
-    # update_user_webhooks(user_id, user_webhooks)
+    utils.update_users_webhook_url(userHash, user_webhooks)
 
     for channel in user_channels:
         await channel.send(config.MAKES_SOME_NOISE_GIF_URL)
