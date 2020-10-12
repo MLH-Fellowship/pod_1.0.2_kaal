@@ -31,7 +31,6 @@ def get_user_details():
         return jsonify({'user': resp}), 200
 
 
-
 @app.route('/storeactivity/', methods=['GET', 'POST'])
 def activity():
     if request.method == 'GET':
@@ -48,8 +47,6 @@ def activity():
 
 
 @app.route('/status/', methods=['GET', 'POST'])
-
-
 def update_status():
     if request.method == 'GET':
         print('GET')
@@ -66,4 +63,3 @@ def update_status():
 if __name__ == '__main__':
 
     app.run(host="0.0.0.0", port=1500, debug=True)
-

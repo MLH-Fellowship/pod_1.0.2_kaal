@@ -23,9 +23,7 @@ async def on_message(ctx):
     for i in user.roles:
         roles.append(i.name)
 
-    response = (
-        f'Starting user registration for {user}. Please check your DM to receive your user key'
-    )
+    response = f'Starting user registration for {user}. Please check your DM to receive your user key'
 
     await ctx.send(response)
     r = requests.post(
