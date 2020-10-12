@@ -5,9 +5,9 @@ name: Python liuting checks
 
 on:
   push:
-    branches: [ master ]
+    branches: [ 'master' ]
   pull_request:
-    branches: [ master ]
+    branches: [ '*' ]
 
 jobs:
   qa-check:
@@ -16,31 +16,31 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    
+
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
-      
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements-test.txt
-    
+
     - name: Check isort
       run: |
         isort . --check-only --diff \
         && echo "SUCCESS: Isort check successful!" \
         || { echo "ERROR: Isort check failed! Hint: did you forget running moropy-format?"; exit 1; }
-    
+
     - name: Check black
       run: |
         black -S --check --diff . \
         && echo "SUCCESS: Black check successful!" \
         || { echo "ERROR: Black check failed! Hint: did you forget running openwisp-qa-format?"; exit 2; }
-    
+
     - name: Check flake8
       run: |
         flake8 && echo "SUCCESS: Flake8 check successful!" \
         || { echo "ERROR: Flake8 check failed!"; exit 3; }
-        
+
