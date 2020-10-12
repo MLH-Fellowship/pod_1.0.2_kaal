@@ -15,11 +15,6 @@ client = discord.Client()
 bot = commands.Bot(command_prefix='!')
 
 
-@client.event
-async def on_ready():
-    print(f'{client.user.name} has connected to Discord!')
-
-
 @bot.command(name='register', help='Start user registration')
 async def on_message(ctx):
     user = ctx.message.author
@@ -29,10 +24,10 @@ async def on_message(ctx):
         roles.append(i.name)
 
     response = (
-        f'Starting user registration for user {user} with roles {roles}, please wait...'
+        f'Starting user registration for {user}. Please check your DM to receive your user key'
     )
 
-    await channel.send(response)
+    await ctx.send(response)
     r = requests.post(
         url=baseURL + '/register/',
         json={"userId": str(user.id), "userName": str(user), "roles": roles},
