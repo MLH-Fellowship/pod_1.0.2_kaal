@@ -4,3 +4,4 @@ set -e
 
 isort .
 black -S .
+flake8 .
