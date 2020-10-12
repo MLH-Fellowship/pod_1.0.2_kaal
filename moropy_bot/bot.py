@@ -6,10 +6,10 @@ from discord.ext import commands
 from dotenv import load_dotenv
 
 load_dotenv()
-TOKEN = os.getenv('DISCORD_BOT_TOKEN')
+TOKEN = os.getenv('DISCORD_TOKEN')
 SERVER_ID = os.getenv('DISCORD_SERVER_ID')
 
-baseURL = "https://kaal-backend.herokuapp.com/"
+baseURL = "https://c5d7a6809c5a.ngrok.io/"
 
 client = discord.Client()
 bot = commands.Bot(command_prefix='!')
@@ -23,7 +23,7 @@ async def on_message(ctx):
     for i in user.roles:
         roles.append(i.name)
 
-    check = requests.post(baseURL + '/validatebot/', json={"userID": "368755063104995339"})
+    check = requests.post(baseURL + '/validatebot/', json={"userID": str(user.id)})
 
     if(check.json()['status'] == True):
         response = f'We have met before! I have sent you your key on the DM again ;)'

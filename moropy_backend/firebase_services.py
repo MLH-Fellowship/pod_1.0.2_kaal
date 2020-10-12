@@ -8,17 +8,18 @@ cred = credentials.Certificate('firebase-key.json')
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()
-user_ref = db.collection(u'users')
 batch = db.batch()
 
 
 def upload(userID, roles, userName):
+    user_ref = db.collection(u'users')
+
     userHash = uuid.uuid4()
     doc_ref = user_ref.document(f"{userHash}")
     doc_ref.set(
         {
             u'roles': roles,
-            u'discordId': userID,
+            u'discordId': str(userID),
             u'userName': userName,
             u'status': 'Away',
         }
@@ -27,6 +28,8 @@ def upload(userID, roles, userName):
 
 
 def get_user(userHash):
+    user_ref = db.collection(u'users')
+
     users = user_ref.stream()
     for user in users:
         if user.id == userHash:
@@ -35,14 +38,20 @@ def get_user(userHash):
 
 
 def validate_user(userID):
-    users = user_ref.stream()
-    for user in users:
-        if userID == user.to_dict()['discordId']:
-            return user.id
-    return "User not found"
+    duplicates = db.collection(u'users').where(u'discordId', u'==', (userID)).stream()
+
+    print('here ' + userID)
+    # duplicates = user_ref.stream()
+    for duplicate in duplicates:
+        print(duplicate.to_dict()['discordId'])
+        if str(userID) == str(duplicate.to_dict()['discordId']):
+            return duplicate.id
+    return 'User not found'
 
 
 def store_activity(userHash, activity):
+    user_ref = db.collection(u'users')
+
     doc_ref = user_ref.document(f'{userHash}').collection('activity')
     for i in range(len(activity)):
         doc_ref.document().set(activity[i])
@@ -50,6 +59,8 @@ def store_activity(userHash, activity):
 
 
 def update(userHash, status):
+    user_ref = db.collection(u'users')
+
     doc_ref = user_ref.document(f'{userHash}')
     doc_ref.update(
         {
@@ -60,6 +71,8 @@ def update(userHash, status):
 
 
 def updateWebhooks(userHash, webhookUrls):
+    user_ref = db.collection(u'users')
+
     doc_ref = user_ref.document(f'{userHash}')
     doc_ref.update({u'webhookUrls': webhookUrls})
     return True

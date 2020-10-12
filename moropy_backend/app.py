@@ -5,7 +5,8 @@ from firebase_services import (
     update,
     updateWebhooks,
     upload,
-    validate_user
+    validate_user,
+    makeChannel
 )
 from flask import Flask, jsonify, request
 
@@ -34,7 +35,6 @@ def get_user_details():
         return jsonify({'user': resp}), 200
 
 
-<<<<<<< HEAD
 @app.route('/validatebot/', methods=['POST'])
 def validate():
     input_json = request.get_json(force=True)
@@ -45,8 +45,6 @@ def validate():
         return jsonify({'status': True, 'userHash': resp}), 200
 
 
-=======
->>>>>>> 2ff0689726e7f69a3d82b52cf940bfed8cf120a7
 @app.route('/storeactivity/', methods=['GET', 'POST'])
 def activity():
     if request.method == 'GET':
@@ -99,9 +97,7 @@ def get_channel_details(channel_id):
         else:
             return jsonify({"msg": "Error"}), 400
 
-<<<<<<< HEAD
 
 if __name__ == '__main__':
-=======
->>>>>>> 2ff0689726e7f69a3d82b52cf940bfed8cf120a7
-    app.run(host="0.0.0.0", port=1500, debug=True)
+
+    app.run(host="localhost", port=1500, debug=True)
