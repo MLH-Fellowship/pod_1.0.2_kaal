@@ -34,8 +34,55 @@
 
 ## 🙇 Why do we need it?
 
-## 🙆 How does this work?
+This project was inspired by [WakaTime](https://wakatime.com/) and the amazing Discord Bots! 
+
+Using this project, the productivity of the pod can be monitored without invading the privacy and can be used to have a healthy competition within the pod. The pod leader (or anyone in the channel) can see the performance of all fellows in that week (or all-time data) in the form of a leaderboard. 🧑🏻‍💻
 
 ## 🧑‍💻 Our tech stack!
 
+1. **[Flask](https://flask.palletsprojects.com/en/1.1.x/)** 1️⃣
+
+    Flask is being used as the backend server to listen for updates from CLI, managing database and listening to the discord bot.
+
+2. **[Click](https://pypi.org/project/click/)** 2️⃣
+
+    Click package manages the beautiful CLI and triggers background scripts for listening to window changes.
+
+3. **[discord.py](https://pypi.org/project/discord.py/)**
+
+    `discord.py` helps to provision the REST APIs for the bot-server communication.
+
+4. **[Firestore](https://firebase.google.com/docs/firestore)**
+
+    Firestore is being used as the primary database.
+
+5. **[Heroku](https://www.heroku.com/)**
+
+    Heroku hosts the backend server for the Bot and CLI.
+
+6. **[xdotool](https://www.howtoinstall.me/ubuntu/18-04/xdotool/)**
+
+    xdotool is a linux package to listen to the active window process ID.
+
 ## 🙏🏻 Anything else?
+
+Remember the rules!
+
+It's _not_ about:
+
+- how good your code is,
+- how novel the idea is, or
+- how useful the project is.
+
+It _is_ about:
+
+- **Impressive**: People's wows are on record! Check Discord!
+- **Design**: A snappy 24/7 available bot and a beautiful CLI :stars:
+- **Completion**: Our hack works completely!
+- **Learning**: Discord Bot, Authorization, Bash Scripting and Flask!
+- **OSS practices**: Plentiful commits, Code reviews, Kanban boards, issues, branches, PRs!
+- **Approved tech**: Flask, Click
+
+In short:
+
+> _Sometimes a pointless project is one of the best hacks!_<br> [—MLH Hackathon Rules](https://github.com/MLH-Fellowship/fellows-0/blob/master/orientation-hackathon/rules.md)
