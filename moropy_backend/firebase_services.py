@@ -53,15 +53,29 @@ def update(userHash, status):
 
 def updateWebhooks(userHash, webhookUrls):
     doc_ref = user_ref.document(f'{userHash}')
+    key = []
     upload = []
     for j in webhookUrls:
+        for y in j.keys():
+            key.append(y)
         for x in j.values():
             upload.append(x)
-    doc_ref.update({
-        u'webhookUrls': upload
-    })
+    doc_ref.update({u'webhookUrls': upload})
+
     channel_ref = db.collection(u'channels')
-    for i in webhookUrls:
-        channel_ref.document().set(i)
+    for i in range(len(webhookUrls)):
+        channel_ref.document(key[i]).set({u'url': upload[i]})
 
     return True
+
+
+def getChannel(channel_id):
+
+    channel_ref = db.collection(u'channels')
+    res = channel_ref.stream()
+    for r in res:
+        if r.id == channel_id:
+            print(True)
+            return r.to_dict()
+
+    return ''

@@ -1,4 +1,11 @@
-from firebase_services import get_user, store_activity, update, upload, updateWebhooks
+from firebase_services import (
+    get_user,
+    getChannel,
+    store_activity,
+    update,
+    updateWebhooks,
+    upload,
+)
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
@@ -58,6 +65,15 @@ def update_web():
     ret = updateWebhooks(input_json['userHash'], input_json['webhookUrls'])
     if ret == True:
         return jsonify({"msg": "webhooks stored successfully"}), 200
+    else:
+        return jsonify({"msg": "Error"}), 400
+
+
+@app.route('/channel/<string:channel_id>', methods=['GET'])
+def get_channel_details(channel_id):
+    ret = getChannel(channel_id)
+    if ret != '':
+        return jsonify({"channel": ret}), 200
     else:
         return jsonify({"msg": "Error"}), 400
 
