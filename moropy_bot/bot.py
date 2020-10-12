@@ -24,6 +24,19 @@ async def on_message(ctx):
     user_dm = await user.create_dm()
     user_roles = [role.name for role in user.roles]
 
+    # Check whether the user has already registered
+    user_exists, userHash = utils.validate_user(user.id)
+    if user_exists:
+        await current_channel.send(
+            f'We have met before <@{user.id}>! I have sent you a present on DM :smiling_imp:'
+        )
+        await user_dm.send(
+            f'There you go with you hashCode: `{userHash}`. '
+            'You can now register yourself through the CLI.'
+            f'When in doubt, head over to our documentation: {config.DOCUMENTATION_URL}'
+        )
+        return
+
     # Send greetings to user on DM
     await user_dm.send(config.LOADING_GIF_URL)
     await user_dm.send(
