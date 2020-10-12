@@ -9,9 +9,19 @@ import click
 import requests
 
 root_dir = ""
-credentials_file_name = "creds"
+credentials_file_name = "creds.json"
 status_file_name = "status"
 base_url = "https://kaal-backend.herokuapp.com"
+
+
+def read_user_data():
+
+    credentials_file_path = os.path.join(root_dir, credentials_file_name)
+
+    with open(credentials_file_path, 'r') as file:
+
+        json_object = json.load(file)
+        return json_object
 
 
 @click.command('register')
@@ -35,31 +45,29 @@ def register_user(code):
 
     response_data = response.json()
 
-    print(response_data)
+    user_data = {
+        "userHash": code,
+        "userName": response_data['user']['userName'],
+    }
 
-    username = "zerefwayne"
+    file_data = json.dumps(user_data, indent=4)
 
     with open(credentials_file_path, "w") as file:
-        file.write(code)
-        file.write('\n')
-        file.write(username)
+        file.write(file_data)
 
     click.echo(
         "Successfully registered {}! You can continue with checking in!".format(
-            username
+            user_data['userName']
         )
     )
 
 
 @click.command('checkin')
 def checkin():
-    credentials_file_path = os.path.join(root_dir, credentials_file_name)
 
-    with open(credentials_file_path, "rb") as file:
-        user_hash = file.readline().decode('UTF-8')
-        user_name = file.readline().decode('UTF-8')
+    user_data = read_user_data()
 
-        print("Checking in for", user_name, user_hash)
+    print("Checking in for", user_data)
 
     subprocess.call("chmod +x ./ticker.py", shell=True)
     # subprocess.call("nohup ./ticker.py >/dev/null 2>&1 &", shell=True)
@@ -69,6 +77,10 @@ def checkin():
 @click.command('checkout')
 def checkout():
     status_file_path = os.path.join(root_dir, status_file_name)
+
+    user_data = read_user_data()
+
+    print("Checking out", user_data)
 
     if not os.path.exists(status_file_path):
         print(status_file_path, "doesn't exist")

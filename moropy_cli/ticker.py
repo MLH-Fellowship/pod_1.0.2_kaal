@@ -18,10 +18,19 @@ import requests
 root_dir = pathlib.Path.home()
 moropy_dir = os.path.join(root_dir, ".moropy")
 status_file_name = "status"
+credentials_file_name = "creds.json"
 status_file_path = os.path.join(moropy_dir, status_file_name)
+credentials_file_path = os.path.join(moropy_dir, credentials_file_name)
 flush_file_path = "flush.csv"
-userhash = "heeelo"
 base_url = "https://kaal-backend.herokuapp.com"
+
+
+def read_user_data():
+
+    with open(credentials_file_path, 'r') as file:
+
+        json_object = json.load(file)
+        return json_object
 
 
 def write_to_file(filename, process, start_time):
@@ -39,6 +48,8 @@ def write_to_file(filename, process, start_time):
 
 
 def push_to_database():
+
+    user_data = read_user_data()
     activities = []
     with open("logs.csv", "rb") as file:
 
@@ -60,7 +71,7 @@ def push_to_database():
                 }
             )
 
-    payload = {"userHash": userhash, "activities": activities}
+    payload = {"userHash": user_data['userHash'], "activities": activities}
 
     payload_json = json.dumps(payload)
 
