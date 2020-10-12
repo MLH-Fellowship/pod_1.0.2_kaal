@@ -23,6 +23,7 @@ def upload(userID, roles, userName):
 
 def get_user(userHash):
     print("getting user")
+
     print(userHash)
     users = user_ref.stream()
     for user in users:

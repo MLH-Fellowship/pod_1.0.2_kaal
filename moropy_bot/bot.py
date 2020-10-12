@@ -27,9 +27,11 @@ async def on_message(ctx):
     roles = []
     for i in user.roles:
         roles.append(i.name)
+
     response = (
         f'Starting user registration for user {user} with roles {roles}, please wait...'
     )
+
     await channel.send(response)
     r = requests.post(
         url=baseURL + '/register/',
