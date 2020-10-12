@@ -11,6 +11,7 @@ import requests
 root_dir = ""
 credentials_file_name = "creds"
 status_file_name = "status"
+base_url = "https://kaal-backend.herokuapp.com"
 
 
 @click.command('register')
@@ -21,7 +22,7 @@ def register_user(code):
     # section to contact the backend API to validate code
 
     response = requests.post(
-        "https://930a005b7377.ngrok.io/validate/", json.dumps({"userHash": code})
+        "{}/validate".format(base_url), json.dumps({"userHash": code})
     )
 
     if response.status_code == 401:
@@ -90,7 +91,7 @@ def set_away():
 
         data = {'userHash': user_hash, 'status': 'away'}
 
-        res = requests.post("https://930a005b7377.ngrok.io/status/", json.dumps(data))
+        res = requests.post("{}/status/".format(base_url), json.dumps(data))
 
         print(res.json())
 
@@ -108,7 +109,7 @@ def set_available():
 
         data = {'userHash': user_hash, 'status': 'available'}
 
-        res = requests.post("https://930a005b7377.ngrok.io/status/", json.dumps(data))
+        res = requests.post("{}/status/".format(base_url), json.dumps(data))
 
         print(res.json())
 
