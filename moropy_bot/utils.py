@@ -10,6 +10,7 @@ HOST_URL = 'https://kaal-backend.herokuapp.com'
 REGISTER_USER_ENDPOINT = '/register/'
 CHANNEL_WEBHOOK_ENDPOINT = '/channel/{}'
 USER_WEBHOOKS_ENDPOINT = '/storechannel'
+USER_VALIDATE_ENDPOINT = '/validatebot/'
 
 
 def _get_absolute_url(relative_url):
@@ -52,3 +53,12 @@ def update_users_webhook_url(userHash, webhook_urls):
     if response.status_code != 200:
         logger.warn(f'Users webhook URLs update failed, status code: {status_code}')
     return status_code, None
+
+
+def validate_user(user_id):
+    response = requests.post(
+        url=_get_absolute_url(USER_VALIDATE_ENDPOINT), json={"userID": str(user_id)}
+    )
+    if response.status_code == 404:
+        return False, None
+    return response.json().get('status', False), response.json().get('userHash', None)
