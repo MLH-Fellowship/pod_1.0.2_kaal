@@ -75,18 +75,22 @@ def push_to_database():
                 }
             )
 
-    payload = {"userHash": user_data['userHash'], "activities": activities, "codingTime": total_time}
+    payload = {
+        "userHash": user_data['userHash'],
+        "activities": activities,
+        "codingTime": total_time,
+    }
 
     payload_json = json.dumps(payload)
 
     # print(payload_json)
 
-    response = requests.post("{}/storeactivity/".format(base_url), payload_json)
+    requests.post("{}/storeactivity/".format(base_url), payload_json)
 
     # print(response.status_code)
 
     # with open(flush_file_path, "w") as f:
-        # f.write(payload_json)
+    # f.write(payload_json)
 
     with open("logs.csv", "w") as file:
         pass
