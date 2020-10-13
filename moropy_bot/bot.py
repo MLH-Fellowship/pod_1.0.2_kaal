@@ -1,13 +1,39 @@
+import config
 import discord
 import utils
 from discord.ext import commands
-
-from . import config
 
 client = discord.Client()
 bot = commands.Bot(command_prefix='!')
 
 CHANNEL_WEBHOOK_URL = {}
+
+
+@bot.command(name='status', help='List availability status of your pod')
+async def on_status_message(ctx):
+    user = ctx.message.author
+    current_channel = ctx.message.channel
+    channel_category = current_channel.category.name
+    user_roles = [role.name for role in user.roles]
+    pod_role = None
+
+    # Check which pod members are to queried
+    for role in user_roles:
+        if role in channel_category:
+            pod_role = role
+            break
+
+    status_code, pods_availability_status = utils.get_pod_availability_status(pod_role)
+
+    if pods_availability_status:
+        message = ''
+        for pod_member in pods_availability_status:
+            if pod_member['status'] == 'Away':
+                message += f'{pod_member["userName"]} - :red_circle:'
+            else:
+                message += f'{pod_member["userName"]} - :green_circle:'
+            message += '\n'
+        await current_channel.send(message)
 
 
 @bot.command(name='register', help='Start user registration')
