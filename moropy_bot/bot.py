@@ -1,3 +1,5 @@
+import datetime
+
 import config
 import discord
 import utils
@@ -27,10 +29,10 @@ async def on_leaderboard_message(ctx):
     status_code, pod_details = utils.get_pod_leaderboard(pod_role)
 
     if pod_details:
-        message = f'<@{user.id}, follwing is the current leaderboard of {pod_role}'
+        message = f'<@{user.id}>, follwing is the current leaderboard of {pod_role}'
         for pod_member in pod_details:
             message += '\n'
-            message += f'{pod_member["userName"]} - {pod_member["codingTime"]}'
+            message += f'{pod_member["userName"]} - {datetime.timedelta(pod_member["codingTime"])}'
         await current_channel.send(message)
 
 
@@ -51,13 +53,13 @@ async def on_status_message(ctx):
     status_code, pods_availability_status = utils.get_pod_availability_status(pod_role)
 
     if pods_availability_status:
-        message = ''
+        message = f'<@{user.id}>, follwing is the availability status of {pod_role}'
         for pod_member in pods_availability_status:
+            message += '\n'
             if pod_member['status'] == 'Away':
                 message += f'{pod_member["userName"]} - :red_circle:'
             else:
                 message += f'{pod_member["userName"]} - :green_circle:'
-            message += '\n'
         await current_channel.send(message)
 
 
