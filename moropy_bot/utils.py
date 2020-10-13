@@ -11,6 +11,7 @@ REGISTER_USER_ENDPOINT = '/register/'
 CHANNEL_WEBHOOK_ENDPOINT = '/channel/{}'
 USER_WEBHOOKS_ENDPOINT = '/storechannel'
 USER_VALIDATE_ENDPOINT = '/validatebot/'
+POD_STATUS_ENDPOINT = '/summary/'
 
 
 def _get_absolute_url(relative_url):
@@ -62,3 +63,10 @@ def validate_user(user_id):
     if response.status_code == 404:
         return False, None
     return response.json().get('status', False), response.json().get('userHash', None)
+
+
+def get_pod_availability_status(role):
+    response = requests.post(
+        url=_get_absolute_url(POD_STATUS_ENDPOINT), json={"role": str(role)}
+    )
+    return response.status_code, response.json().get('msg', None)
