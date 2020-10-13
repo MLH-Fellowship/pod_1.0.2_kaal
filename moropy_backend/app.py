@@ -1,6 +1,7 @@
 from firebase_services import (
     get_user,
     getChannel,
+    makeChannel,
     store_activity,
     update,
     updateWebhooks,
@@ -63,7 +64,7 @@ def update_status():
 def update_web():
     input_json = request.get_json(force=True)
     ret = updateWebhooks(input_json['userHash'], input_json['webhookUrls'])
-    if ret == True:
+    if ret is True:
         return jsonify({"msg": "webhooks stored successfully"}), 200
     else:
         return jsonify({"msg": "Error"}), 400
@@ -80,7 +81,7 @@ def get_channel_details(channel_id):
     else:
         input_json = request.get_json(force=True)
         ret = makeChannel(channel_id, input_json['webhook_url'])
-        if ret == True:
+        if ret is True:
             return jsonify({"msg": "Channel created successfully"}), 200
         else:
             return jsonify({"msg": "Error"}), 400
