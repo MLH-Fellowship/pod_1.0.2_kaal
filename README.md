@@ -16,6 +16,20 @@
 
 — *Gamify the pod's productivity!*
 
+#### Screenshots
+
+###### Registration
+
+![Registration Demo](https://github.com/MLH-Fellowship/pod_1.0.2_kaal/blob/master/branding/register_demo.png)  
+  
+###### Check In
+
+![Check In](https://github.com/MLH-Fellowship/pod_1.0.2_kaal/blob/master/branding/Screenshot%20from%202020-10-13%2001-12-17.png)
+
+###### Check Out
+
+![Check Out](https://github.com/MLH-Fellowship/pod_1.0.2_kaal/blob/master/branding/Screenshot%20from%202020-10-13%2001-12-26.png)
+
 ## 🧑‍🔬 How to use it?
 
 #### Prerequisites:
