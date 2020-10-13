@@ -100,8 +100,8 @@ def checkin():
     click.echo("🧐 Getting some popcorn! 🍿 It's interesting to watch you work!")
 
     subprocess.call("chmod +x ./ticker.py", shell=True)
-    # subprocess.call("nohup ./ticker.py &", shell=True)
-    subprocess.call("nohup ./ticker.py >/dev/null 2>&1 &", shell=True)
+    subprocess.call("nohup ./ticker.py &", shell=True)
+    # subprocess.call("nohup ./ticker.py >/dev/null 2>&1 &", shell=True)
 
 
 @click.command('checkout')

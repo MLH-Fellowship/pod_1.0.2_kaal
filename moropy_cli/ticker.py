@@ -85,9 +85,9 @@ def push_to_database():
 
     # print(payload_json)
 
-    requests.post("{}/storeactivity/".format(base_url), payload_json)
+    response = requests.post("{}/storeactivity/".format(base_url), payload_json)
 
-    # print(response.status_code)
+    print(response.status_code)
 
     # with open(flush_file_path, "w") as f:
     # f.write(payload_json)
@@ -135,9 +135,9 @@ while ticker_continue:
 
     process_name_cmd = "ps -p {} -o comm=".format(pid)
 
-    process_name = subprocess.getoutput(process_name_cmd)
+    status, process_name = subprocess.getstatusoutput(process_name_cmd)
 
-    if process_name != previous_window:
+    if status == 0 and process_name != previous_window:
 
         with open("logs.csv", "a") as window_logs:
 
