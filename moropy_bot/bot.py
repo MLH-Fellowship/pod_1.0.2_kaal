@@ -9,6 +9,31 @@ bot = commands.Bot(command_prefix='!')
 CHANNEL_WEBHOOK_URL = {}
 
 
+# TODO: Remove code duplicity
+@bot.command(name='leaderboard', help='Show leaderboard of the pod')
+async def on_leaderboard_message(ctx):
+    user = ctx.message.author
+    current_channel = ctx.message.channel
+    channel_category = current_channel.category.name
+    user_roles = [role.name for role in user.roles]
+    pod_role = None
+
+    # Check which pod members are to queried
+    for role in user_roles:
+        if role in channel_category:
+            pod_role = role
+            break
+
+    status_code, pod_details = utils.get_pod_leaderboard(pod_role)
+
+    if pod_details:
+        message = f'<@{user.id}, follwing is the current leaderboard of {pod_role}'
+        for pod_member in pod_details:
+            message += '\n'
+            message += f'{pod_member["userName"]} - {pod_member["codingTime"]}'
+        await current_channel.send(message)
+
+
 @bot.command(name='status', help='List availability status of your pod')
 async def on_status_message(ctx):
     user = ctx.message.author
