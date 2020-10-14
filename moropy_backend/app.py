@@ -1,3 +1,4 @@
+import requests as request_lib
 from firebase_services import (
     get_user,
     getChannel,
@@ -53,8 +54,12 @@ def update_status():
         return jsonify({"msg": "This is a POST route"})
     else:
         input_json = request.get_json(force=True)
-        ret = update(input_json['userHash'], input_json['status'])
+        # Update status in database
+        user_hash = input_json['userHash']
+        user_status = input_json['status']
+        ret = update(user_hash, user_status)
         if ret == 'successful':
+            notify_on_discord(user_hash, user_status)
             return jsonify({"msg": "Status updated successfully"}), 200
         else:
             return jsonify({"msg": "Error"}), 400
@@ -85,6 +90,22 @@ def get_channel_details(channel_id):
             return jsonify({"msg": "Channel created successfully"}), 200
         else:
             return jsonify({"msg": "Error"}), 400
+
+
+def notify_on_discord(user_hash, status):
+    user = get_user(user_hash)
+    user_channel_urls = user['webhookUrls']
+    username = user['userName']
+    if status == 'Away':
+        message = (
+            f'\U0001F534 `{username}` has checked out! '
+            'Friendly reminder for everyone to stretch.'
+        )
+    else:
+        message = f'\U0001F7E2 `{username}` has just checked-in, good day `{username}`!'
+
+    for url in user_channel_urls:
+        request_lib.post(url, json={'content': message, 'tts': False})
 
 
 if __name__ == '__main__':
