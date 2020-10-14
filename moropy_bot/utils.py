@@ -1,11 +1,9 @@
 from logging import Logger
 
 import requests
+from config import KAAL_BACKEND_URL
 
 logger = Logger(__name__)
-
-
-HOST_URL = 'https://kaal-backend.herokuapp.com'
 
 REGISTER_USER_ENDPOINT = '/register/'
 CHANNEL_WEBHOOK_ENDPOINT = '/channel/{}'
@@ -15,7 +13,7 @@ POD_DETAILS_ENDPOINT = '/summary/'
 
 
 def _get_absolute_url(relative_url):
-    return HOST_URL + relative_url
+    return KAAL_BACKEND_URL + relative_url
 
 
 def registerUser(discord_user_id, discord_username, discord_roles):
