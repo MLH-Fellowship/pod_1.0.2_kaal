@@ -1,3 +1,4 @@
 discord.py~=1.5
 python-dotenv~=0.14
 requests~=2.24
+tabulate[widechars]~=0.8

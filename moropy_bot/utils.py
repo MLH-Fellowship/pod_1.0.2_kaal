@@ -1,6 +1,8 @@
+import datetime
 from logging import Logger
 
 import requests
+from tabulate import tabulate
 
 logger = Logger(__name__)
 
@@ -77,3 +79,56 @@ def get_pod_leaderboard(role):
         url=_get_absolute_url(POD_DETAILS_ENDPOINT), json={"role": str(role)}
     )
     return response.status_code, response.json().get('msg', None)
+
+
+def beautify_pod_coding_time(pod_details):
+    pod_coding_time = []
+    # Extract username and coding time from pod_details
+    for pod_member in pod_details:
+        pod_coding_time.append(
+            [
+                pod_member["userName"],
+                datetime.timedelta(seconds=pod_member["codingTime"]),
+            ]
+        )
+    # Sort these deatails in descending order on basis of coding time
+    pod_coding_time.sort(key=lambda coding_time: coding_time[1], reverse=True)
+    # Add ranks to the data
+    for index, element in enumerate(pod_coding_time):
+        element.insert(0, index + 1)
+        element[-1] = str(element[-1])
+    # Tabulate the data
+    table = str(
+        tabulate(
+            pod_coding_time,
+            headers=['Rank', 'Pod Member', 'Coding Time'],
+            tablefmt="fancy_grid",
+            colalign=("center", "center", "center"),
+        )
+    )
+    return table
+
+
+def beautify_pod_availability_status(pod_details):
+    pod_availability = []
+    # Extract username and coding time from pod_details
+    for pod_member in pod_details:
+        pod_availability.append(
+            [
+                pod_member['userName'],
+                '\U0001F534' if pod_member['status'] == 'Away' else '\U0001F7E2',
+            ]
+        )
+    # Tabulate the data
+    table = str(
+        tabulate(
+            pod_availability,
+            headers=['Pod Member', 'Availability Status'],
+            tablefmt="fancy_grid",
+            colalign=(
+                "center",
+                "center",
+            ),
+        )
+    )
+    return table

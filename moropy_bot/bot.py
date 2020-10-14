@@ -1,5 +1,3 @@
-import datetime
-
 import config
 import discord
 import utils
@@ -29,11 +27,13 @@ async def on_leaderboard_message(ctx):
     status_code, pod_details = utils.get_pod_leaderboard(pod_role)
 
     if pod_details:
-        message = f'<@{user.id}>, follwing is the current leaderboard of {pod_role}'
-        for pod_member in pod_details:
-            message += '\n'
-            message += f'{pod_member["userName"]} - {datetime.timedelta(pod_member["codingTime"])}'
+        message = (
+            f'<@{user.id}>, following is the current leaderboard of `{pod_role}`\n'
+        )
         await current_channel.send(message)
+        await current_channel.send(
+            '```' + utils.beautify_pod_coding_time(pod_details) + '```'
+        )
 
 
 @bot.command(name='status', help='List availability status of your pod')
@@ -50,17 +50,16 @@ async def on_status_message(ctx):
             pod_role = role
             break
 
-    status_code, pods_availability_status = utils.get_pod_availability_status(pod_role)
+    status_code, pod_details = utils.get_pod_availability_status(pod_role)
 
-    if pods_availability_status:
-        message = f'<@{user.id}>, follwing is the availability status of {pod_role}'
-        for pod_member in pods_availability_status:
-            message += '\n'
-            if pod_member['status'] == 'Away':
-                message += f'{pod_member["userName"]} - :red_circle:'
-            else:
-                message += f'{pod_member["userName"]} - :green_circle:'
+    if pod_details:
+        message = (
+            f'<@{user.id}>, follwing is the availability of members of `{pod_role}``'
+        )
         await current_channel.send(message)
+        await current_channel.send(
+            '```' + utils.beautify_pod_availability_status(pod_details) + '```'
+        )
 
 
 @bot.command(name='register', help='Start user registration')
